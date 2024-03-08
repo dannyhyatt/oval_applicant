@@ -1,0 +1,274 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../output.css" rel="stylesheet">
+</head>
+<body class="flex flex-col items-center justify-center min-h-[100svh] min-w-[100svw] text-center">
+  <div class="w-full sm:w-8/12 lg:w-6/12 xl:w-5/12 mx-4 p-4">
+    <h1 class="text-4xl mb-2">Oval Applicant: Presidents</h1>
+    <p class="mb-10">
+      Guess the president below using the four hints, party and state.<br>
+      Revealing hints, party and state will be added to your final score.
+    </p>
+    <div class="flex flex-col gap-4">
+
+      <div class="flex justify-between mb-4">
+        <button id="reveal-party-btn" class="py-2 px-4 border-2 rounded-md min-w-[15ch]">Reveal Party</button>
+        <button id="reveal-state-btn" class="py-2 px-4 border-2 rounded-md min-w-[15ch]">
+          <span id="reveal-state-btn-text">Reveal State</span>
+          <img id="state-img" class="align-[initial] ml-0.5 inline hidden">
+        </button>
+      </div>
+      
+      <div class="flex flex-col items-stretch gap-1 [&>div]:border-2 [&>div]:py-2 [&>div]:px-4 [&>div]:rounded-md">
+        <div id="hint1">Hint #1</div>
+        <div id="hint2">Hint #2</div>
+        <div id="hint3">Hint #3</div>
+        <div id="hint4">Hint #4</div>
+      </div>
+
+      <div class="flex gap-2">
+        <input placeholder="Your guess" list="presidents-list" class="py-2 px-4 rounded-md border-2 flex-grow">
+        <button id="submit-btn" class="py-2 px-4 rounded-md border-2">Submit</button>
+      </div>
+      <datalist id="presidents-list">
+        <option value="George Washington"></option>
+        <option value="John Adams"></option>
+        <option value="Thomas Jefferson"></option>
+        <option value="James Madison"></option>
+        <option value="James Monroe"></option>
+        <option value="John Quincy Adams"></option>
+        <option value="Andrew Jackson"></option>
+        <option value="Martin Van Buren"></option>
+        <option value="William Henry Harrison"></option>
+        <option value="John Tyler"></option>
+        <option value="James K. Polk"></option>
+        <option value="Zachary Taylor"></option>
+        <option value="Millard Fillmore"></option>
+        <option value="Franklin Pierce"></option>
+        <option value="James Buchanan"></option>
+        <option value="Abraham Lincoln"></option>
+        <option value="Andrew Johnson"></option>
+        <option value="Ulysses S. Grant"></option>
+        <option value="Rutherford B. Hayes"></option>
+        <option value="James A. Garfield"></option>
+        <option value="Chester A. Arthur"></option>
+        <option value="Grover Cleveland"></option>
+        <option value="Benjamin Harrison"></option>
+        <option value="William McKinley"></option>
+        <option value="Theodore Roosevelt"></option>
+        <option value="William Howard Taft"></option>
+        <option value="Woodrow Wilson"></option>
+        <option value="Warren G. Harding"></option>
+        <option value="Calvin Coolidge"></option>
+        <option value="Herbert Hoover"></option>
+        <option value="Franklin D. Roosevelt"></option>
+        <option value="Harry S. Truman"></option>
+        <option value="Dwight D. Eisenhower"></option>
+        <option value="John F. Kennedy"></option>
+        <option value="Lyndon B. Johnson"></option>
+        <option value="Richard Nixon"></option>
+        <option value="Gerald Ford"></option>
+        <option value="Jimmy Carter"></option>
+        <option value="Ronald Reagan"></option>
+        <option value="George H. W. Bush"></option>
+        <option value="Bill Clinton"></option>
+        <option value="George W. Bush"></option>
+        <option value="Barack Obama"></option>
+        <option value="Donald Trump"></option>
+        <option value="Joe Biden"></option>
+      </datalist>
+
+    </div>
+  </div>
+
+  <!-- game over modal -->
+  <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden" id="game-over-modal">
+    <div class="flex flex-col items-center justify-center w-full h-full">
+      <div class="bg-white px-8 py-4 rounded-md">
+        <h2 class="text-2xl my-4" id="game-over-modal-title"></h2>
+        <p class="mb-4" id="game-over-modal-message">Here's your final score: <br><br></p>
+        <br>
+        <button class="py-2 px-4 border-2 rounded-md mb-4" id="game-over-modal-copy-btn">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- so tailwind renders these classes -->
+  <span class="hidden bg-red-100 bg-blue-100"></span>
+
+  <script>
+
+    const games = [
+      {
+        name: 'Ulysses S. Grant',
+        party: 'Republican',
+        state: 'Ohio',
+        hint1: 'Made his good friend Elihu Washburne his Secretary of State for eleven days',
+        hint2: 'Oversaw financial panic that began with the bankruptcy of Jay Cooke & Company',
+        hint3: 'Appointed Ely Parker as the first Native American commissioner of Indian Affairs',
+        hint4: 'Served as the highest ranking officer during the Civil War'
+      }
+    ];
+
+    const game = games[0]; // don't bother checking the day yet
+
+    document.getElementById('hint1').innerText = game.hint1;
+    let hintsUsed = 1;
+    let partyRevealed = false;
+    let stateRevealed = false;
+    let guessedPresidents = [];
+
+    document.getElementById('reveal-party-btn').addEventListener('click', function() {
+      document.getElementById('reveal-party-btn').disabled = true;
+      document.getElementById('reveal-party-btn').innerText = game.party;
+      partyRevealed = true;
+      if(game.party === 'Republican') {
+        document.getElementById('reveal-party-btn').classList.add('bg-red-100');
+      } else {
+        document.getElementById('reveal-party-btn').classList.add('bg-blue-100');
+      }
+    });
+    document.getElementById('reveal-state-btn').addEventListener('click', function() {
+      document.getElementById('reveal-state-btn').disabled = true;
+      document.getElementById('reveal-state-btn-text').innerText = game.state;
+      stateRevealed = true;
+      document.getElementById('state-img').classList.remove('hidden');
+      document.getElementById('state-img').src = `../assets/flags/${stateToAbbreviation[game.state].toLowerCase()}.png`;
+    });
+
+    document.getElementById('submit-btn').addEventListener('click', handleGuess);
+    document.querySelector('input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        handleGuess();
+      }
+    });
+
+    function handleGuess() {
+
+      // check if the guess is correct
+      const guess = document.querySelector('input').value;
+      console.log(guess, game.name, guessedPresidents)
+
+      if (guessedPresidents.includes(guess)) {
+        alert('You already guessed this president.')
+        return;
+      }
+
+      guessedPresidents.push(guess);
+      if (guess === game.name) {
+        winGame();
+      } else if(hintsUsed < 4) {
+        // reveal next hint
+        hintsUsed++;
+        document.getElementById(`hint${hintsUsed}`).innerText = game[`hint${hintsUsed}`];
+        document.querySelector('input').value = '';        
+      } else {
+        loseGame();
+      }
+
+    }
+
+    function endGame() {
+      document.querySelector('input').disabled = true;
+      document.getElementById('submit-btn').disabled = true;
+      document.getElementById('reveal-party-btn').disabled = true;
+      document.getElementById('reveal-state-btn').disabled = true;
+      document.getElementById('game-over-modal').classList.remove('hidden');
+
+      let score = `Party: ${partyRevealed ? '✅' : '❌'}\nState: ${stateRevealed ? '✅' : '❌'}\n\n`;
+      
+      for(let i = 1; i <= hintsUsed; i++) {
+        score += `Hint ${i}: `;
+        if(i !== hintsUsed) {
+          score += `❌\n`;
+        } else {
+          score += `✅\n`;
+        }
+      }
+
+      document.getElementById('game-over-modal-message').innerText += score;
+      document.getElementById('game-over-modal-copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(score).then(function() {
+          document.getElementById('game-over-modal-copy-btn').innerText = 'Copied!';  
+          setTimeout(() => {
+            document.getElementById('game-over-modal-copy-btn').innerText = 'Copy';
+          }, 1000);
+        });
+      });
+
+      console.log('end game');
+    }
+
+    function winGame() {
+      // todo
+      console.log('win');
+      document.getElementById('game-over-modal-title').innerText = 'You Won!';
+      endGame();
+    }
+
+    function loseGame() {
+      console.log('lose');
+      document.getElementById('game-over-modal-title').innerText = 'You Lost';
+      endGame();
+    }
+
+    const stateToAbbreviation = {
+      'Alabama': 'AL',
+      'Alaska': 'AK',
+      'Arizona': 'AZ',
+      'Arkansas': 'AR',
+      'California': 'CA',
+      'Colorado': 'CO',
+      'Connecticut': 'CT',
+      'Delaware': 'DE',
+      'Florida': 'FL',
+      'Georgia': 'GA',
+      'Hawaii': 'HI',
+      'Idaho': 'ID',
+      'Illinois': 'IL',
+      'Indiana': 'IN',
+      'Iowa': 'IA',
+      'Kansas': 'KS',
+      'Kentucky': 'KY',
+      'Louisiana': 'LA',
+      'Maine': 'ME',
+      'Maryland': 'MD',
+      'Massachusetts': 'MA',
+      'Michigan': 'MI',
+      'Minnesota': 'MN',
+      'Mississippi': 'MS',
+      'Missouri': 'MO',
+      'Montana': 'MT',
+      'Nebraska': 'NE',
+      'Nevada': 'NV',
+      'New Hampshire': 'NH',
+      'New Jersey': 'NJ',
+      'New Mexico': 'NM',
+      'New York': 'NY',
+      'North Carolina': 'NC',
+      'North Dakota': 'ND',
+      'Ohio': 'OH',
+      'Oklahoma': 'OK',
+      'Oregon': 'OR',
+      'Pennsylvania': 'PA',
+      'Rhode Island': 'RI',
+      'South Carolina': 'SC',
+      'South Dakota': 'SD',
+      'Tennessee': 'TN',
+      'Texas': 'TX',
+      'Utah': 'UT',
+      'Vermont': 'VT',
+      'Virginia': 'VA',
+      'Washington': 'WA',
+      'West Virginia': 'WV',
+      'Wisconsin': 'WI',
+      'Wyoming': 'WY'
+    };
+
+  </script>
+
+</body>
+</html>
