@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="../output.css" rel="stylesheet">
+  <title>Oval Applicant: Presidents</title>
 </head>
-<body class="flex flex-col items-center justify-center min-h-[100svh] min-w-[100svw] text-center">
+<body class="flex flex-col items-center justify-center min-h-[100svh] min-w-[100svw] text-center overflow-scroll">
   <div class="w-full sm:w-8/12 lg:w-6/12 xl:w-5/12 mx-4 p-4">
-    <h1 class="text-4xl mb-2">Oval Applicant: Presidents</h1>
+    <h1 class="text-2xl font-extrabold mb-2">Oval Applicant: Presidents</h1>
     <p class="mb-10">
-      Guess the president below using the four hints, party and state.<br>
-      Revealing hints, party and state will be added to your final score.
+      Guess the president below using the four hints, party and state. Revealing hints, party and state will be added to your final score.
     </p>
     <div class="flex flex-col gap-4">
 
@@ -85,7 +85,7 @@
   </div>
 
   <!-- game over modal -->
-  <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden" id="game-over-modal">
+  <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden" id="game-over-modal">
     <div class="flex flex-col items-center justify-center w-full h-full">
       <div class="bg-white px-8 py-4 rounded-md">
         <h2 class="text-2xl my-4" id="game-over-modal-title"></h2>
@@ -178,9 +178,16 @@
       document.getElementById('reveal-state-btn').disabled = true;
       document.getElementById('game-over-modal').classList.remove('hidden');
 
-      let score = `Party: ${partyRevealed ? '✅' : '❌'}\nState: ${stateRevealed ? '✅' : '❌'}\n\n`;
+      let score = '';
+      if(partyRevealed && stateRevealed) {
+        score += 'Party and state revealed\n';
+      } else if(partyRevealed) {
+        score += 'Party revealed\n';
+      } else if(stateRevealed) {
+        score += 'State revealed\n';
+      }
       
-      for(let i = 1; i <= hintsUsed; i++) {
+      for(let i = 1; i <= Math.min(hintsUsed, 4); i++) {
         score += `Hint ${i}: `;
         if(i !== hintsUsed) {
           score += `❌\n`;
@@ -191,7 +198,7 @@
 
       document.getElementById('game-over-modal-message').innerText += score;
       document.getElementById('game-over-modal-copy-btn').addEventListener('click', function() {
-        navigator.clipboard.writeText(score).then(function() {
+        clipboard.writeText(score).then(function() {
           document.getElementById('game-over-modal-copy-btn').innerText = 'Copied!';  
           setTimeout(() => {
             document.getElementById('game-over-modal-copy-btn').innerText = 'Copy';
@@ -212,6 +219,7 @@
     function loseGame() {
       console.log('lose');
       document.getElementById('game-over-modal-title').innerText = 'You Lost';
+      hintsUsed = 5;
       endGame();
     }
 
