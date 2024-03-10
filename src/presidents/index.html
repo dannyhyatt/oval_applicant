@@ -70,6 +70,7 @@
         <option value="John F. Kennedy"></option>
         <option value="Lyndon B. Johnson"></option>
         <option value="Richard Nixon"></option>
+        <option value="Wolfie"></option>
         <option value="Gerald Ford"></option>
         <option value="Jimmy Carter"></option>
         <option value="Ronald Reagan"></option>
@@ -89,8 +90,9 @@
     <div class="flex flex-col items-center justify-center w-full h-full">
       <div class="bg-white px-8 py-4 rounded-md">
         <h2 class="text-2xl my-4" id="game-over-modal-title"></h2>
+        <p id="game-over-modal-answer"></p>
         <p class="mb-4">Here's your final score: </p>
-        <input class="mb-4 bg-transparent text-center opacity-100" id="game-over-modal-message" disabled>
+        <textarea class="mb-4 bg-transparent text-center opacity-100 resize-none cursor-text" id="game-over-modal-message" disabled></textarea>
         <br>
         <button class="py-2 px-4 border-2 rounded-md mb-4" id="game-over-modal-copy-btn">Copy</button>
       </div>
@@ -102,19 +104,13 @@
 
   <script>
 
-    const games = [
-      {
-        name: 'Ulysses S. Grant',
-        party: 'Republican',
-        state: 'Ohio',
-        hint1: 'Made his good friend Elihu Washburne his Secretary of State for eleven days',
-        hint2: 'Oversaw financial panic that began with the bankruptcy of Jay Cooke & Company',
-        hint3: 'Appointed Ely Parker as the first Native American commissioner of Indian Affairs',
-        hint4: 'Served as the highest ranking officer during the Civil War'
-      }
-    ];
+    let gameIndex = 0;
 
-    const game = games[0]; // don't bother checking the day yet
+    const games = [
+      {"name": "Wolfie", "party": "Democrat", "state": "Tennessee", "hint1": "Allegedly one of the only redheads", "hint2": "A common myth about him was that he was so fat he broke a bathtub", "hint3": "Claims to have invented the word bandwagon", "hint4": "German doofus"},
+      {"name":"Ulysses S. Grant","party":"Republican","state":"Ohio","hint1":"Made his good friend Elihu Washburne his Secretary of State for eleven days","hint2":"Oversaw financial panic that began with the bankruptcy of Jay Cooke & Company","hint3":"Appointed Ely Parker as the first Native American commissioner of Indian Affairs","hint4":"Served as the highest ranking officer during the Civil War"},{"name":"James Garfield","party":"Republican","state":"Ohio","hint1":"Wrote articles for magazines such as The Atlantic and The North American Review as well as educational journals prior to becoming President.","hint2":"Attacked the Mormon Church and their support of polygamy in his inaugural address, stating that “The Mormon Church not only offends the moral sense of manhood by sanctioning polygamy, but prevents the administration of justice through ordinary instrumentalities of law.” ","hint3":"Could write in Greek in one hand and in Latin in the other simultaneously ","hint4":"Shot and killed by madman Charles Guiteau, cutting his Presidency short after only six and a half months in office."},{"name":"James K. Polk","party":"Democrat","state":"Tennessee","hint1":"Guaranteed the independence of New Granada in the Bidlack Treaty.","hint2":"The Department of the Interior was established on his last day in office. ","hint3":"Clashed with diplomat Nicholas Trist when Trist refused to return back to Washington DC and instead negotiated an end to a war that Polk wished to continue in order to gain more from a nearly totally defeated enemy. ","hint4":"Was Commander in Chief during the Mexican American War and took/purchased the territories of modern day California, Colorado, New Mexico, Utah, Arizona, and Nevada as well as parts of Oklahoma, Wyoming, and Kansas."},{"name":"John F. Kennedy","party":"Democrat","state":"Massachusetts","hint1":"Rejected operation Northwoods, a false flag operation in which CIA agents would stage false flag attacks on both American military and civilian targets, likely in Miami, Florida. ","hint2":"Went into Berlin as a correspondent in 1945 and infamously wrote of the recently deceased Hitler that “He had in him the stuff of which legends are made.”  ","hint3":"Gave the go ahead for the Bay of Pigs invasion, but did not allow for the necessary air support for it to work.","hint4":"Was shot and killed by Lee Harvey Oswald in downtown Dallas, sparking many conspiracy theories "},{"name":"Chester Arthur","party":"Republican","state":"New York ","hint1":"Served as Collector of the Port of New York prior to becoming President","hint2":"Oversaw the naval construction of the Squadron of Evolution ","hint3":"Signed the Chinese Exclusion Act, despite his own reservations against the Bill. ","hint4":"Took over the Presidency after the assassination of the former President, only the second time a Vice President took over due to the slaying of an American President to that point."},{"name":"Geroge W Bush","party":"Republican","state":"Texas","hint1":"Signed the The Genetic Information Nondiscrimination Act, which barred health insurance companies from using genetic information about a patient to dictate their rates ","hint2":"Prior to his Presidency, he was the first Governor to be elected in Texas for consecutive four year terms ","hint3":"Signed the Patriot Act, which many Americans consider to be unconstitutional due to the indefinite holding of immigrants, phone tapping, and home searching that became legal through the Bill","hint4":"Had the controversial Dick Cheney as his Vice President, whom many believed to be a self serving Washington insider"}];
+
+    const game = games[gameIndex]; // don't bother checking the day yet
 
     document.getElementById('hint1').innerText = game.hint1;
     let hintsUsed = 1;
@@ -158,7 +154,7 @@
         return;
       }
 
-      guessedPresidents.push(guess);
+      if(guess) guessedPresidents.push(guess);
       if (guess === game.name) {
         winGame();
       } else if(hintsUsed < 4) {
@@ -179,7 +175,7 @@
       document.getElementById('reveal-state-btn').disabled = true;
       document.getElementById('game-over-modal').classList.remove('hidden');
 
-      let score = '';
+      let score = `Oval Applicant: Presidents #${gameIndex + 1}\n\n`;
       if(partyRevealed && stateRevealed) {
         score += 'Party and state revealed\n';
       } else if(partyRevealed) {
@@ -197,7 +193,8 @@
         }
       }
 
-      document.getElementById('game-over-modal-message').value = score;
+      document.getElementById('game-over-modal-message').value = score.substring(0, score.length - 1);
+      document.getElementById('game-over-modal-message').style.height = document.getElementById('game-over-modal-message').scrollHeight + 'px';
       document.getElementById('game-over-modal-copy-btn').addEventListener('click', function() {
         var copyText = document.getElementById("game-over-modal-message");
         copyText.select();
@@ -222,6 +219,7 @@
     function loseGame() {
       console.log('lose');
       document.getElementById('game-over-modal-title').innerText = 'You Lost';
+      document.getElementById('game-over-modal-answer').innerText = `The answer was President ${game.name}`;
       hintsUsed = 5;
       endGame();
     }
