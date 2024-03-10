@@ -89,7 +89,8 @@
     <div class="flex flex-col items-center justify-center w-full h-full">
       <div class="bg-white px-8 py-4 rounded-md">
         <h2 class="text-2xl my-4" id="game-over-modal-title"></h2>
-        <p class="mb-4" id="game-over-modal-message">Here's your final score: <br><br></p>
+        <p class="mb-4">Here's your final score: </p>
+        <input class="mb-4 bg-transparent text-center opacity-100" id="game-over-modal-message" disabled>
         <br>
         <button class="py-2 px-4 border-2 rounded-md mb-4" id="game-over-modal-copy-btn">Copy</button>
       </div>
@@ -196,14 +197,16 @@
         }
       }
 
-      document.getElementById('game-over-modal-message').innerText += score;
+      document.getElementById('game-over-modal-message').value = score;
       document.getElementById('game-over-modal-copy-btn').addEventListener('click', function() {
-        clipboard.writeText(score).then(function() {
-          document.getElementById('game-over-modal-copy-btn').innerText = 'Copied!';  
-          setTimeout(() => {
-            document.getElementById('game-over-modal-copy-btn').innerText = 'Copy';
-          }, 1000);
-        });
+        var copyText = document.getElementById("game-over-modal-message");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+        navigator.clipboard.writeText(copyText.value);
+        document.getElementById('game-over-modal-copy-btn').innerText = 'Copied!';  
+        setTimeout(() => {
+          document.getElementById('game-over-modal-copy-btn').innerText = 'Copy';
+        }, 1000);
       });
 
       console.log('end game');

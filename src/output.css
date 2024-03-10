@@ -548,10 +548,6 @@ video {
   position: fixed;
 }
 
-.absolute {
-  position: absolute;
-}
-
 .left-0 {
   left: 0px;
 }
@@ -712,6 +708,10 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-transparent {
+  background-color: transparent;
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -758,10 +758,6 @@ video {
   line-height: 2.5rem;
 }
 
-.font-bold {
-  font-weight: 700;
-}
-
 .font-extrabold {
   font-weight: 800;
 }
@@ -773,6 +769,10 @@ video {
 
 .opacity-50 {
   opacity: 0.5;
+}
+
+.opacity-100 {
+  opacity: 1;
 }
 
 @media (min-width: 640px) {
@@ -791,10 +791,6 @@ video {
   .xl\:w-5\/12 {
     width: 41.666667%;
   }
-}
-
-.\[\&\>a\]\:align-middle>a {
-  vertical-align: middle;
 }
 
 .\[\&\>div\]\:rounded-md>div {
