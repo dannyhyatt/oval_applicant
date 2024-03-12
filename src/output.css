@@ -797,9 +797,9 @@ video {
 }
 
 html {
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  background-repeat: repeat;
+  background-size: 300px;
+  background-position: top;
 }
 
 @media (min-width: 640px) {

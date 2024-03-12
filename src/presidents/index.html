@@ -18,7 +18,6 @@
         <button id="reveal-party-btn" class="py-2 px-4 border-2 rounded-md min-w-[15ch] bg-white">Reveal Party</button>
         <button id="reveal-state-btn" class="py-2 px-4 border-2 rounded-md min-w-[15ch] bg-white">
           <span id="reveal-state-btn-text">Reveal State</span>
-          <!-- <img id="state-img" class="align-[initial] ml-0.5 inline hidden"> -->
         </button>
       </div>
       
@@ -175,7 +174,13 @@
       }
 
       if(guess) guessedPresidents.push(guess);
-      if (guess === game.name) {
+      const guessParts = guess.split(' ');
+      const gameParts = game.name.split(' ');
+      const guessFirst = guessParts[0].toLowerCase();
+      const gameFirst = gameParts[0].toLowerCase();
+      const guessLast = guessParts[guessParts.length - 1].toLowerCase();
+      const gameLast = gameParts[gameParts.length - 1].toLowerCase();
+      if (guessFirst === gameFirst && guessLast === gameLast) {
         winGame();
       } else if(hintsUsed < 4) {
         // reveal next hint
