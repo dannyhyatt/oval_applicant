@@ -587,18 +587,6 @@ video {
   margin-bottom: 2rem;
 }
 
-.ml-0 {
-  margin-left: 0px;
-}
-
-.ml-0\.5 {
-  margin-left: 0.125rem;
-}
-
-.inline {
-  display: inline;
-}
-
 .flex {
   display: flex;
 }
@@ -759,10 +747,6 @@ video {
 
 .text-center {
   text-align: center;
-}
-
-.align-\[initial\] {
-  vertical-align: initial;
 }
 
 .text-2xl {
