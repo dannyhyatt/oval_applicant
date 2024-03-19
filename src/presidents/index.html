@@ -30,7 +30,7 @@
 
       <div class="flex gap-2">
         <input placeholder="Your guess" list="presidents-list" class="py-2 px-4 rounded-md border-2 flex-grow">
-        <button id="submit-btn" class="py-2 px-4 rounded-md border-2 bg-white">Submit</button>
+        <button id="submit-btn" class="py-2 px-4 rounded-md border-2 bg-white min-w-[9ch]">Skip</button>
       </div>
       <datalist id="presidents-list">
         <option value="George Washington"></option>
@@ -154,6 +154,13 @@
         handleGuess();
       }
     });
+    document.querySelector('input').addEventListener('keyup', function(e) {
+      if(document.querySelector('input').value) {
+        document.getElementById('submit-btn').innerText = 'Submit';
+      } else {
+        document.getElementById('submit-btn').innerText = 'Skip';
+      }
+    });
 
     document.getElementById('how-to-play-button').addEventListener('click', function() {
       document.getElementById('how-to-play-modal').classList.remove('hidden');
@@ -243,7 +250,7 @@
     function loseGame() {
       console.log('lose');
       document.getElementById('game-over-modal-title').innerText = 'You Lost';
-      document.getElementById('game-over-modal-answer').innerText = `The answer was President ${game.name}`;
+      document.getElementById('game-over-modal-answer').innerHTML = `The answer was President <b>${game.name}</b>`;
       hintsUsed = 5;
       endGame();
     }

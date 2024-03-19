@@ -615,6 +615,10 @@ video {
   min-width: 15ch;
 }
 
+.min-w-\[9ch\] {
+  min-width: 9ch;
+}
+
 .max-w-md {
   max-width: 28rem;
 }
